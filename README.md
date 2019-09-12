@@ -35,10 +35,10 @@ This project is a server-side rendered, web application that was built using the
 
 #### Server
 
-- **Node.js** : An open-source javascript framework that enables the creation of user
-- **Express** : An open-source node.js framework that makes configuring an http server application with Node.js much easier.
+- **Node.js** : An open-source javascript runtime that enables the creation of javascript applications with network, file, and general system access. We use this as the baseline for our server
+- **Express** : An open-source node.js framework that makes configuring an http server application with Node.js much easier. We use his to manage how the application respons to http requests (handles incoming, and sends responses to client). 
 
 #### Templates & Views
 
-- **liquid.js** : An open source templating language based on HTML and shopify's Liquid specification. We use this to create the apps Views (page templates)
+- **Liquid.js** : An open source templating language based on HTML and shopify's Liquid specification. We use this to create the apps Views (page templates)
 - **Sass** : A CSS pre-compiler / spec that enables features like CSS nesting, variables, and more.
