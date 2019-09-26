@@ -37,6 +37,7 @@ This project is a server-side rendered, web application that was built using the
 
 - **Liquid.js** : An open source templating language based on HTML and shopify's Liquid specification. We use this to create the apps Views (page templates)
 - **Sass** : A CSS pre-compiler / spec that enables features like CSS nesting, variables, and more.
+- [**Materialize.css**](https://materializecss.com): An open source CSS Library used that allows us to implement Google's Material Design specification.
 
 ### Hosting
 
