@@ -26,11 +26,6 @@ Beyond the fact that University Confessions is a university project, we hope tha
 
 This project is a server-side rendered, web application that was built using the following technologies.
 
-### Hosting
-
-- **Heroku Hosting** : This is used to host our app that handles all incoming http requests, interacts with the an SQL database, and executes application logic.
-- **Heroku PostgreSQL** : This hosts an PostgreSQL database that is accessed through our Node.js app
-
 ### Application
 
 #### Server
@@ -42,3 +37,10 @@ This project is a server-side rendered, web application that was built using the
 
 - **Liquid.js** : An open source templating language based on HTML and shopify's Liquid specification. We use this to create the apps Views (page templates)
 - **Sass** : A CSS pre-compiler / spec that enables features like CSS nesting, variables, and more.
+
+### Hosting
+
+- **Heroku Hosting** : This is used to host our app that handles all incoming http requests, interacts with the an SQL database, and executes application logic.
+- **Heroku PostgreSQL** : This hosts an PostgreSQL database that is accessed through our Node.js app
+
+
