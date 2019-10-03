@@ -6,6 +6,19 @@ A place for university students to anonymously complain, confess, and relate abo
 
 University confessions is a project for COMP 230: Databases, at the University of The Fraser Valley. This project was supposed to demonstrate using a SQL database in a real-world situation.
 
+### Method for Project
+
+University Confessions will be a forum-like website that allwos users to anonomously post about their Universities. 
+
+#### Entity Types
+
+This is  a _temporary list of entity types for the project_ and is subject to more as we add features to the scope
+
+| Entity Type | Description                                  |
+| ----------- | -------------------------------------------- |
+| University  | Uni information, and location                |
+| Comment     | A comment associate to a university, upvotes |
+
 ### Goals of the project
 
 Beyond the fact that University Confessions is a university project, we hope that university confessions can be a place for students to:
