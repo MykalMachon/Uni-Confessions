@@ -1,4 +1,4 @@
-# University Confessions 🤫
+# University Confessions 🤫 (WIP Name)
 
 A place for university students to anonymously complain, confess, and relate about the stupid things we do.
 
