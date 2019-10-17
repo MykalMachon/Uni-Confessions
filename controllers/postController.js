@@ -1,3 +1,13 @@
+// * GET REQUESTS
+
+// example route: /school/:schoolId/post/:postId
+exports.viewPost = (req, res) => {
+  // TODO extract post ID
+  // TODO get post information
+  // TODO get comment information
+  // TODO return both comments and post information to the view
+};
+
 // * POST REQUESTS
 
 exports.validatePost = (req, res, next) => {
