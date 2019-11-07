@@ -2,10 +2,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 const sassMiddleware = require('node-sass-middleware');
+const { pool } = require('./dbConfig');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+
 const { Liquid } = require('liquidjs');
 const engine = new Liquid();
 
@@ -15,6 +18,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
+
 app.use(
   sassMiddleware({
     src: path.join(__dirname, 'public'),
