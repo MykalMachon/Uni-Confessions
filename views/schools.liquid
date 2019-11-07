@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>{{title}}</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <!-- Compiled and minified Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+
+  <body>
+    <nav class="deep-purple darken-2">
+      <div class="nav-wrapper container">
+        <div class="col s12">
+          <a href="/" class="breadcrumb">University Confessions</a>
+          <a href="/schools/" class="breadcrumb">Schools</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+
+      <h3>{{title}}</h3>    
+      <div class="row">
+        {% for school in schoolData %}
+          <div>
+            <h5>{{school.name}}</h5>
+            <p>{{school.address}}</p>
+            <a href="/schools/{{school.id}}">See School Forum</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Compiled and minified Materialize Javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>

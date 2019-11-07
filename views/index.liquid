@@ -2,31 +2,40 @@
   <head>
     <title>{{title}}</title>
     
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
      <!-- Compiled and minified Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
 
   <body>
-    <h1>{{title}}</h1>
-    <p>Welcome to Express</p>
-    
-    <div class="row">
-    <div class="col s12 m6">
-      <div class="card blue-grey lighten-5">
-        <div class="card-content black-text">
-          <span class="card-title">Example Card</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
+    <nav class="deep-purple darken-2">
+      <div class="nav-wrapper container ">
+        <div class="col s12">
+          <a href="/" class="breadcrumb">University Confessions</a>
         </div>
-        <div class="card-action">
-          <a href="#">This is a link</a>
+      </div>
+    </nav>
+    <div class="container"> 
+      <h1>{{title}}</h1>
+      
+      <div class="row">
+      <div class="col s12 m6">
+        <div class="card blue-grey lighten-5">
+          <div class="card-content black-text">
+            <span class="card-title">School Forums</span>
+            <p>Each school has their own forum for confessions.</p>
+          </div>
+          <div class="card-action">
+            <a href="/schools/">Check out our Schools</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-    
+
+
     <!-- Compiled and minified Materialize Javascript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
