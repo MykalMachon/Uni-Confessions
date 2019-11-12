@@ -1,24 +1,30 @@
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const sassMiddleware = require('node-sass-middleware');
-const { pool } = require('./dbConfig');
+const session = require('express-session');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const { Liquid } = require('liquidjs');
 const engine = new Liquid();
+const flash = require('flash');
 
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(session({
+  cookie: { maxAge: 60000 },
+  secret: 'comp230',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(cors());
+app.use(flash());
 
 app.use(
   sassMiddleware({
