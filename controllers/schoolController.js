@@ -39,12 +39,12 @@ exports.addSchool = (req, res) => {
 
   if (!validator.isEmpty(name) && !validator.isEmpty(address)) {
     // sanitize dom content using domPurify?
-    pool.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING id`, (err, dbRes) => {
+    pool.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`, (err, dbRes) => {
       if (err) {
         req.flash('error', `Oh no! something went wrong when creating your school!`);
         res.redirect('/schools/new');
       } else {
-        const newId = dbRes.id;
+        const newId = dbRes.rows[0].id;
         req.flash('success', `${name} was added successfully! make a post?`);
         res.redirect(`/schools/${newId}`);
       }
