@@ -1,6 +1,7 @@
 // * GET REQUESTS
 
 const { pool } = require('../dbConfig');
+const validator = require('validator');
 
 exports.getSchools = (req, res) => {
   pool.query(`SELECT * FROM schools`, (err, dbRes) => {
@@ -9,7 +10,6 @@ exports.getSchools = (req, res) => {
       res.status = 500;
       res.send();
     } else {
-      console.log(dbRes.rows);
       res.render('schools', { schoolData: dbRes.rows, title: "Schools" });
     }
   });
@@ -27,12 +27,30 @@ exports.getSchool = (req, res) => {
   })
 }
 
+exports.getAddSchool = (req, res) => {
+  res.render('newSchool', { title: `Add a new school!` });
+}
+
 // * POST REQUESTS
 
 // ! This should be accessible through the API only and should be secured with token auth
 exports.addSchool = (req, res) => {
+  const { name, address, test } = req.body;
 
-  // TODO extract and sanitize school data
-  // TODO Insert school data into the DB
-  // TODO Return the ID of the school
+  if (!validator.isEmpty(name) && !validator.isEmpty(address) && validator.isEmpty(test)) {
+    // TODO sanitize dom content using domPurify?
+    pool.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`, (err, dbRes) => {
+      if (err) {
+        req.flash('error', `Oh no! something went wrong when creating your school!`);
+        res.redirect('/schools/new');
+      } else {
+        const newId = dbRes.rows[0].id;
+        req.flash('success', `${name} was added successfully! make a post?`);
+        res.redirect(`/schools/${newId}`);
+      }
+    })
+  } else {
+    req.flash('error', `Some of the data entered was invalid, try again!`);
+    res.redirect('/schools/new');
+  }
 };

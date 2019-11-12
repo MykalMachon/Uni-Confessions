@@ -9,6 +9,9 @@ router.get('/', (req, res, next) => {
 });
 // Get school pages
 router.get('/schools/', schoolController.getSchools);
+router.get('/schools/new', schoolController.getAddSchool);
 router.get('/schools/:id', schoolController.getSchool);
+// Post School Pages
+router.post(`/schools/new`, schoolController.addSchool);
 
 module.exports = router;

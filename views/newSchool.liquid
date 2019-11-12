@@ -18,6 +18,7 @@
         <div class="col s12">
           <a class="breadcrumb" href="/">University Confessions</a>
           <a class="breadcrumb" href="/schools/">Schools</a>
+          <a class="breadcrumb" href="/schools/new">New School</a>
         </div>
       </div>
     </nav>
@@ -28,19 +29,21 @@
         </script>
       {% endfor %}
 
-      <h3>{{title}}</h3>
+      <h3>{{ title }}</h3>
 
       <div class="row">
-        {% for school in schoolData %}
-          <div>
-            <h5>{{school.name}}</h5>
-            <p>{{school.address}}</p>
-            <a href="/schools/{{school.id}}">See School Forum</a>
-          </div>
-        {% endfor %}
-        <p class="grey-text">Don't see your school?
-          <a href="/schools/new">add a new one</a>
-        </p>
+        <form action="/schools/new" method="POST">
+          <label for="name">School Name</label>
+          <input name="name" type="text"/>
+          <label for="name">School Address</label>
+          <input name="address" type="text"/>
+          <input name="test" type="hidden"/>
+          <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
+            Create School
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+        <a href="/schools/">← Return to schools view</a>
       </div>
     </div>
   </body>
