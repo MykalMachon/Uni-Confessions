@@ -1,26 +1,35 @@
 <html>
   <head>
-    <title>{{title}}</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-     <!-- Compiled and minified Materialize CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>{{ title }}</title>
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <!-- Compiled and minified CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   </head>
 
   <body>
     <nav class="deep-purple darken-2">
       <div class="nav-wrapper container">
         <div class="col s12">
-          <a href="/" class="breadcrumb">University Confessions</a>
-          <a href="/schools/" class="breadcrumb">Schools</a>
+          <a class="breadcrumb" href="/">University Confessions</a>
+          <a class="breadcrumb" href="/schools/">Schools</a>
         </div>
       </div>
     </nav>
     <div class="container">
+      {% for message in flash %}
+        <script>
+          M.toast({html: '{{message.message}}'});
+        </script>
+      {% endfor %}
 
-      <h3>{{title}}</h3>    
+      <h3>{{title}}</h3>
+
       <div class="row">
         {% for school in schoolData %}
           <div>
@@ -31,7 +40,5 @@
         {% endfor %}
       </div>
     </div>
-    <!-- Compiled and minified Materialize Javascript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
 </html>
