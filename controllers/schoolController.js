@@ -50,7 +50,7 @@ exports.addSchool = (req, res) => {
       }
     })
   } else {
-    req.flash('error', `Some of the data entered was invalid`);
+    req.flash('error', `Some of the data entered was invalid, try again!`);
     res.redirect('/schools/new');
   }
 };
