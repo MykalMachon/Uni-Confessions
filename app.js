@@ -1,8 +1,9 @@
 const express = require('express');
-const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
 const session = require('express-session');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 const indexRouter = require('./routes/index');
 
@@ -32,10 +33,22 @@ app.use(cors());
 app.use(flash());
 
 // clear all flashes upon re-render
-app.get('/*', function (req, res, next) {
+app.get('/*', (req, res, next) => {
   req.session.flash = [];
+
   next();
 });
+
+// sanitize all data sent over post requests
+app.post('/*', (req, res, next) => {
+  const window = (new JSDOM('')).window;
+  const DOMPurify = createDOMPurify(window);
+  // for each key-val in the object, loop over and sanitize values
+  for (let [key, value] of Object.entries(req.body)) {
+    req.body[key] = DOMPurify.sanitize(value);
+  }
+  next();
+})
 
 app.use('/', indexRouter);
 

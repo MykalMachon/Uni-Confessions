@@ -35,10 +35,10 @@ exports.getAddSchool = (req, res) => {
 
 // ! This should be accessible through the API only and should be secured with token auth
 exports.addSchool = (req, res) => {
-  const { name, address } = req.body;
+  const { name, address, test } = req.body;
 
-  if (!validator.isEmpty(name) && !validator.isEmpty(address)) {
-    // sanitize dom content using domPurify?
+  if (!validator.isEmpty(name) && !validator.isEmpty(address) && validator.isEmpty(test)) {
+    // TODO sanitize dom content using domPurify?
     pool.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`, (err, dbRes) => {
       if (err) {
         req.flash('error', `Oh no! something went wrong when creating your school!`);
