@@ -22,7 +22,19 @@ exports.getSchool = (req, res) => {
       res.status = 500;
       res.send();
     } else {
-      res.render('school', { schoolData: dbRes.rows[0], title: dbRes.rows[0].name });
+      pool.query(`SELECT * FROM posts WHERE schoolId='${req.params.id}'`, (postErr, postRes) => {
+        if (postErr) {
+          console.log(postErr);
+          res.status = 500;
+          res.send();
+        } else {
+          res.render('school', {
+            schoolData: dbRes.rows[0],
+            title: dbRes.rows[0].name,
+            postData: postRes.rows
+          });
+        }
+      })
     }
   })
 }

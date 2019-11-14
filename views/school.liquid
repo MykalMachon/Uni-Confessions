@@ -40,7 +40,7 @@
           <p>{{schoolData.address}}</p>
         </div>
         <div class="col s6 m6">
-          <a class="waves-effect waves-light deep-purple darken-2 btn right">
+          <a href="{{schoolData.id}}/new" class="waves-effect waves-light deep-purple darken-2 btn right">
             CREATE NEW POST
             <i class="material-icons right">add_circle</i>
           </a>
@@ -50,8 +50,14 @@
       <div class="divider"></div>
 
       <div class="row">
-        {% if schoolData.posts.length > 0 %}
-          {% for post in schoolData.posts %}{% endfor %}
+        {% if postData.length > 0 %}
+          {% for post in postData %}
+            <div class="col s12"> 
+              <h5>{{post.title}}</h5>
+              <p>{{post.body}}</p>
+              <p class="grey-text">{{post.createdate | date: "%a, %b %d, %Y"}}</p>
+            </div>
+          {% endfor %}
         {% else %}
           <div class="col s12 m12">
             <p class="grey-text">hmm, seems like there aren't any posts here yet... You should make a new one!</p>
