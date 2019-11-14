@@ -25,11 +25,12 @@ exports.addPost = (req, res) => {
         '${schoolId}'
       ) RETURNING *`, (err, dbRes) => {
       if (err) {
-        console.error(err);
+        console.error(`Shoot! Something broke while adding a post.`);
+        console.log(`Here is the post data: \n title: ${title} \n "${body}" \n schoolId "${schoolId}"`)
         req.flash('error', `Oh no! something went wrong when creating your post!`);
         res.redirect(`/schools/${schoolId}/new`);
       } else {
-        req.flash('success', `your post was made!`);
+        req.flash('success', `Your post was made!`);
         res.redirect(`/schools/${schoolId}`);
       }
     })
