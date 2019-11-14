@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>{{ title }}</title>
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <!-- Compiled and minified CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  </head>
+
+  <body>
+    <nav class="deep-purple darken-2">
+      <div class="nav-wrapper container">
+        <div class="col s12">
+          <a class="breadcrumb" href="/">University Confessions</a>
+          <a class="breadcrumb" href="/schools/">Schools</a>
+          <a class="breadcrumb" href="/schools/new">New Post</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      {% for message in flash %}
+        <script>
+          M.toast({html: '{{message.message}}'});
+        </script>
+      {% endfor %}
+
+      <h3>{{ title }}</h3>
+
+      <div class="row">
+        <form action="/schools/{{data.schoolId}}/new" method="POST">
+          <label for="title">Post Title</label>
+          <input name="title" type="text">
+          <label for="body">Post Body</label>
+          <textarea name="body" class="materialize-textarea"></textarea>
+          <input name="test" type="hidden"/>
+          <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
+            Create Post
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,32 +1,40 @@
+const { pool } = require('../dbConfig');
+const validator = require('validator');
+
 // * GET REQUESTS
+// example route: /school/:schoolId/new
+// Gets the page that allows you to post 
+exports.getAddPost = (req, res) => {
+  res.render('newPost', { title: `Add a new post!`, data: { schoolId: req.params.id } });
+}
 
-// example route: /school/:schoolId/post/:postId
-exports.viewPost = (req, res) => {
-  // TODO extract post ID
-  // TODO get post information
-  // TODO get comment information
-  // TODO return both comments and post information to the view
-};
+exports.addPost = (req, res) => {
+  const schoolId = req.params.id;
+  const { title, body, test } = req.body;
 
-// * POST REQUESTS
-
-exports.validatePost = (req, res, next) => {
-  // TODO Check for entered hidden field
-  // TODO Remove invalid characters and run through sanitization plugin
-  // TODO Run through profanity filter and detect issues
-  // TODO if any of these fail, return the form with an error message (look into using flash())
-  // TODO if all is good, call next() (which will call addPostToSchool) and then return;
-};
-
-exports.addPostToSchool = (req, res) => {
-  // TODO extract and sanitize post data, as well as school ID
-  // TODO insert post data into the DB
-  // TODO get the ID of the post and redirect them to the post page (see res.redirect())
-};
-
-// Posts can only be deleted by users who have the same userCookieId as the poster
-exports.deletePost = (req, res) => {
-  // TODO ensure the user has permission to delete the post
-  // TODO remove post from database
-  // TODO return them to the school page
-};
+  if (!validator.isEmpty(title) && !validator.isEmpty(body) && validator.isEmpty(test)) {
+    pool.query(`INSERT INTO posts (
+      title,
+      body, 
+      createDate, 
+      schoolId
+      ) values(
+        '${title}',
+        '${body}',
+        '${new Date().toDateString()}',
+        '${schoolId}'
+      ) RETURNING *`, (err, dbRes) => {
+      if (err) {
+        console.error(err);
+        req.flash('error', `Oh no! something went wrong when creating your post!`);
+        res.redirect(`/schools/${schoolId}/new`);
+      } else {
+        req.flash('success', `your post was made!`);
+        res.redirect(`/schools/${schoolId}`);
+      }
+    })
+  } else {
+    req.flash('error', `The body of your post can't be empty, try again!`);
+    res.redirect(`/schools/${schoolId}`);
+  }
+}
