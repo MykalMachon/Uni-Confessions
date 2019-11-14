@@ -18,15 +18,16 @@ exports.addPost = (req, res) => {
       body, 
       createDate, 
       schoolId
-      ) values(
-        '${title}',
-        '${body}',
+      ) values (
+        '${validator.escape(title.trim())}',
+        '${validator.escape(body.trim())}',
         '${new Date().toDateString()}',
         '${schoolId}'
       ) RETURNING *`, (err, dbRes) => {
       if (err) {
         console.error(`Shoot! Something broke while adding a post.`);
-        console.log(`Here is the post data: \n title: ${title} \n "${body}" \n schoolId "${schoolId}"`)
+        console.error(err);
+        console.log(`Here is the post data: \n title: "${title}" \n "${body}" \n schoolId "${schoolId}"`)
         req.flash('error', `Oh no! something went wrong when creating your post!`);
         res.redirect(`/schools/${schoolId}/new`);
       } else {

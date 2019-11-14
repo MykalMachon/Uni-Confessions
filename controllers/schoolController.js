@@ -28,10 +28,15 @@ exports.getSchool = (req, res) => {
           res.status = 500;
           res.send();
         } else {
+          const decodedPostRows = postRes.rows.map((row) => {
+            row.title = validator.unescape(row.title);
+            row.body = validator.unescape(row.body);
+            return row;
+          })
           res.render('school', {
             schoolData: dbRes.rows[0],
             title: dbRes.rows[0].name,
-            postData: postRes.rows
+            postData: decodedPostRows
           });
         }
       })
