@@ -3,45 +3,51 @@
 const { pool } = require('../dbConfig');
 const validator = require('validator');
 
-exports.getSchools = (req, res) => {
-  pool.query(`SELECT * FROM schools`, (err, dbRes) => {
-    if (err) {
-      console.log(err);
-      res.status = 500;
-      res.send();
-    } else {
-      res.render('schools', { schoolData: dbRes.rows, title: "Schools" });
-    }
-  });
+exports.getSchools = async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const dbRes = await client.query(`SELECT * FROM schools`);
+    res.render('schools', { schoolData: dbRes.rows, title: "Schools" });
+  } catch (err) {
+    console.log(err);
+    res.status = 500;
+    res.send();
+  } finally {
+    client.release();
+  }
 };
 
-exports.getSchool = (req, res) => {
-  pool.query(`SELECT * FROM schools WHERE id='${req.params.id}'`, (err, dbRes) => {
-    if (err) {
-      console.log(err);
-      res.status = 500;
-      res.send();
-    } else {
-      pool.query(`SELECT * FROM posts WHERE schoolId='${req.params.id}'`, (postErr, postRes) => {
-        if (postErr) {
-          console.log(postErr);
-          res.status = 500;
-          res.send();
-        } else {
-          const decodedPostRows = postRes.rows.map((row) => {
-            row.title = validator.unescape(row.title);
-            row.body = validator.unescape(row.body);
-            return row;
-          })
-          res.render('school', {
-            schoolData: dbRes.rows[0],
-            title: dbRes.rows[0].name,
-            postData: decodedPostRows
-          });
-        }
-      })
+exports.getSchool = async (req, res) => {
+  const schoolPostsQuery = `
+  SELECT posts.title, posts.body, posts.createDate, schools.name, schools.address, schools.id
+  FROM posts, schools
+  WHERE posts.schoolId=${req.params.id} AND posts.schoolId=schools.id
+  `;
+  const client = await pool.connect();
+  try {
+    const dbRes = await client.query(schoolPostsQuery);
+    const decodedPostRows = dbRes.rows.map((row) => {
+      row.title = validator.unescape(row.title);
+      row.body = validator.unescape(row.body);
+      return row;
+    })
+    const schoolData = {
+      id: dbRes.rows[0].id,
+      name: dbRes.rows[0].name,
+      address: dbRes.rows[0].address
     }
-  })
+    res.render('school', {
+      schoolData,
+      title: dbRes.rows[0].name,
+      postData: decodedPostRows
+    });
+  } catch (err) {
+    console.log(err);
+    res.status = 500;
+    res.send();
+  } finally {
+    client.release();
+  }
 }
 
 exports.getAddSchool = (req, res) => {
@@ -50,22 +56,21 @@ exports.getAddSchool = (req, res) => {
 
 // * POST REQUESTS
 
-// ! This should be accessible through the API only and should be secured with token auth
-exports.addSchool = (req, res) => {
+exports.addSchool = async (req, res) => {
   const { name, address, test } = req.body;
 
   if (!validator.isEmpty(name) && !validator.isEmpty(address) && validator.isEmpty(test)) {
-    // TODO sanitize dom content using domPurify?
-    pool.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`, (err, dbRes) => {
-      if (err) {
-        req.flash('error', `Oh no! something went wrong when creating your school!`);
-        res.redirect('/schools/new');
-      } else {
-        const newId = dbRes.rows[0].id;
-        req.flash('success', `${name} was added successfully! make a post?`);
-        res.redirect(`/schools/${newId}`);
-      }
-    })
+    try {
+      const client = await pool.connect();
+      const dbRes = await client.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`);
+      req.flash('success', `${name} was added successfully! make a post?`);
+      res.redirect(`/schools/${dbRes.rows[0].id}`);
+    } catch (err) {
+      req.flash('error', `Oh no! something went wrong when creating your school!`);
+      res.redirect('/schools/new');
+    } finally {
+      client.release();
+    }
   } else {
     req.flash('error', `Some of the data entered was invalid, try again!`);
     res.redirect('/schools/new');
