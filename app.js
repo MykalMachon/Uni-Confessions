@@ -1,7 +1,8 @@
 const express = require('express');
 const logger = require('morgan');
-const cors = require('cors');
+// const cors = require('cors');
 const session = require('express-session');
+const cookieParser = require("cookie-parser");
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 
@@ -21,15 +22,23 @@ app.set('view engine', 'liquid'); // set liquid to default
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(
   session({
-    cookie: { maxAge: 60000 },
+    name: 'sid',
     secret: 'comp230',
     resave: false,
+    httpOnly: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 15,
+      secure: false,
+      path: '/',
+      httpOnly: false
+    },
   })
 );
-app.use(cors());
+// app.use(cors());
 app.use(flash());
 
 // clear all flashes upon re-render
