@@ -49,20 +49,27 @@
 
       <div class="divider"></div>
 
-      <div class="row">
         {% if postData.length > 0 %}
           {% for post in postData %}
-            <div class="col s12"> 
-              <h5>{{post.title}}</h5>
-              <p>{{post.body}}</p>
-              <p class="grey-text">{{post.createdate | date: "%a, %b %d, %Y"}}</p>
+            <div class="row">             
+              <div class="col s8 m10"> 
+                <h5>{{post.title}}</h5>
+                <p class="grey-text">{{post.createdate | date: "%a, %b %d, %Y"}}</p>
+              </div>
+              <div class="col s4 m2" style="display: flex; justify-content: center; align-items: center; height: 89px;"> 
+                <a href="/schools/{{schoolData.id}}/{{post.id}}">Read Post</a>
+              </div>
             </div>
+            <div class="divider"></div>
           {% endfor %}
         {% else %}
+        <div class="row"> 
           <div class="col s12 m12">
             <p class="grey-text">hmm, seems like there aren't any posts here yet... You should make a new one!</p>
           </div>
+        </div>
         {% endif %}
+      <div class="row">  
         <p>
           <a href="/schools/">← Return to schools view</a>
         </p>
