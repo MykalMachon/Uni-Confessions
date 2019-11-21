@@ -1,8 +1,7 @@
-// * GET REQUESTS
-
 const { pool } = require('../dbConfig');
 const validator = require('validator');
 
+// * GET REQUESTS
 exports.getSchools = async (req, res) => {
   const client = await pool.connect();
   try {
@@ -18,14 +17,13 @@ exports.getSchools = async (req, res) => {
 };
 
 exports.getSchool = async (req, res) => {
-  //! IMPLEMENT BUGFIX : When School is first created and has 0 posts, this query doesn't get school data. MUST FIX
   const schooDataQuery = `
   SELECT name, address, id
   FROM schools
   WHERE id=${req.params.id}
   `;
   const postDataQuery = `
-  SELECT posts.title, posts.body, posts.createDate
+  SELECT posts.id, posts.title, posts.body, posts.createDate
   FROM posts
   WHERE schoolId=${req.params.id}
   `;
@@ -34,6 +32,7 @@ exports.getSchool = async (req, res) => {
     const schoolData = await client.query(schooDataQuery);
     const postData = await client.query(postDataQuery);
     const decodedPostData = postData.rows.map((row) => {
+      row.id = row.id;
       row.title = validator.unescape(row.title);
       row.body = validator.unescape(row.body);
       return row;
@@ -62,7 +61,6 @@ exports.getAddSchool = (req, res) => {
 };
 
 // * POST REQUESTS
-
 exports.addSchool = async (req, res) => {
   const { name, address, test } = req.body;
 

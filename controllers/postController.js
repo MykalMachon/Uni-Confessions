@@ -2,16 +2,47 @@ const { pool } = require('../dbConfig');
 const validator = require('validator');
 
 // * GET REQUESTS
-// example route: /school/:schoolId/new
-// Gets the page that allows you to post
 exports.getAddPost = (req, res) => {
-  console.log('got the add post page');
   res.render('newPost', {
     title: `Add a new post!`,
     data: { schoolId: req.params.id },
   });
 };
 
+exports.getPostPage = async (req, res) => {
+  const schoolId = req.params.id;
+  const postId = req.params.postId;
+
+  const client = await pool.connect();
+  try {
+    const postDataQuery = `
+    SELECT title, body, createDate, deviceId
+    FROM posts
+    WHERE id=${postId} 
+    `;
+    const postData = await client.query(postDataQuery);
+    const decodedPostData = {
+      id: postData.rows[0].id,
+      title: validator.unescape(postData.rows[0].title),
+      body: validator.unescape(postData.rows[0].body),
+      createDate: postData.rows[0].createDate,
+    };
+    res.render('post', {
+      postData: decodedPostData,
+      schoolData: { id: schoolId, },
+      title: decodedPostData.title,
+    });
+  } catch (err) {
+    res.redirect(`/schools/${schoolId}`);
+  } finally {
+    client.release();
+  }
+  // Get Post Data
+  // Get Post Comments
+  // Render Post Page with Post Data
+};
+
+// * POST REQUESTS
 exports.addPost = async (req, res) => {
   const schoolId = req.params.id;
   const { title, body, test } = req.body;
