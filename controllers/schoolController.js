@@ -7,7 +7,7 @@ exports.getSchools = async (req, res) => {
   const client = await pool.connect();
   try {
     const dbRes = await client.query(`SELECT * FROM schools`);
-    res.render('schools', { schoolData: dbRes.rows, title: "Schools" });
+    res.render('schools', { schoolData: dbRes.rows, title: 'Schools' });
   } catch (err) {
     console.log(err);
     res.status = 500;
@@ -37,16 +37,16 @@ exports.getSchool = async (req, res) => {
       row.title = validator.unescape(row.title);
       row.body = validator.unescape(row.body);
       return row;
-    })
+    });
     const decodedSchoolData = {
       id: schoolData.rows[0].id,
       name: schoolData.rows[0].name,
-      address: schoolData.rows[0].address
-    }
+      address: schoolData.rows[0].address,
+    };
     res.render('school', {
       title: decodedSchoolData.name,
       schoolData: decodedSchoolData,
-      postData: decodedPostData
+      postData: decodedPostData,
     });
   } catch (err) {
     console.log(err);
@@ -55,25 +55,34 @@ exports.getSchool = async (req, res) => {
   } finally {
     client.release();
   }
-}
+};
 
 exports.getAddSchool = (req, res) => {
   res.render('newSchool', { title: `Add a new school!` });
-}
+};
 
 // * POST REQUESTS
 
 exports.addSchool = async (req, res) => {
   const { name, address, test } = req.body;
 
-  if (!validator.isEmpty(name) && !validator.isEmpty(address) && validator.isEmpty(test)) {
+  if (
+    !validator.isEmpty(name) &&
+    !validator.isEmpty(address) &&
+    validator.isEmpty(test)
+  ) {
     const client = await pool.connect();
     try {
-      const dbRes = await client.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`);
+      const dbRes = await client.query(
+        `INSERT INTO schools (name, address, deviceId) values('${name}', '${address}', '${req.cookies.deviceId}') RETURNING *`
+      );
       req.flash('success', `${name} was added successfully! make a post?`);
       res.redirect(`/schools/${dbRes.rows[0].id}`);
     } catch (err) {
-      req.flash('error', `Oh no! something went wrong when creating your school!`);
+      req.flash(
+        'error',
+        `Oh no! something went wrong when creating your school!`
+      );
       res.redirect('/schools/new');
     } finally {
       client.release();

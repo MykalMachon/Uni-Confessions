@@ -1,7 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const session = require('express-session');
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const indexRouter = require('./routes/index');
@@ -34,7 +34,7 @@ app.use(
       maxAge: 1000 * 60 * 15,
       secure: false,
       path: '/',
-      httpOnly: false
+      httpOnly: false,
     },
   })
 );
@@ -56,14 +56,17 @@ app.get('/*', (req, res, next) => {
 // * RUN ON ANY POST REQUEST
 app.post('/*', (req, res, next) => {
   // sanitize all data sent over post requests
-  const window = (new JSDOM('')).window;
+  const window = new JSDOM('').window;
   const DOMPurify = createDOMPurify(window);
   // for each key-val in the object, loop over and sanitize values
   for (let [key, value] of Object.entries(req.body)) {
     req.body[key] = DOMPurify.sanitize(value);
   }
   next();
-})
+});
+
+const { rebuildDatabase } = require('./dbConfig');
+rebuildDatabase();
 
 app.use('/', indexRouter);
 
