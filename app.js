@@ -65,9 +65,6 @@ app.post('/*', (req, res, next) => {
   next();
 });
 
-const { rebuildDatabase } = require('./dbConfig');
-rebuildDatabase();
-
 app.use('/', indexRouter);
 
 module.exports = app;
