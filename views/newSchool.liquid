@@ -1,50 +1,52 @@
 <html>
-  <head>
-    <title>{{ title }}</title>
 
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-    <!-- Compiled and minified CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+<head>
+  <title>{{ title }}</title>
 
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+  <!-- Compiled and minified CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-  </head>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <body>
-    <nav class="deep-purple darken-2">
-      <div class="nav-wrapper container">
-        <div class="col s12">
-          <a class="breadcrumb" href="/">University Confessions</a>
-          <a class="breadcrumb" href="/schools/">Schools</a>
-          <a class="breadcrumb" href="/schools/new">New School</a>
-        </div>
-      </div>
-    </nav>
-    <div class="container">
-      {% for message in flash %}
-        <script>
-          M.toast({html: '{{message.message}}'});
-        </script>
-      {% endfor %}
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
 
-      <h3>{{ title }}</h3>
-
-      <div class="row">
-        <form action="/schools/new" method="POST">
-          <label for="name">School Name</label>
-          <input name="name" type="text"/>
-          <label for="name">School Address</label>
-          <input name="address" type="text"/>
-          <input name="test" type="hidden"/>
-          <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
-            Create School
-            <i class="material-icons right">send</i>
-          </button>
-        </form>
-        <a href="/schools/">← Return to schools view</a>
+<body>
+  <nav class="deep-purple darken-2">
+    <div class="nav-wrapper container">
+      <div class="col s12">
+        <a class="breadcrumb" href="/">University Confessions</a>
+        <a class="breadcrumb" href="/schools/">Schools</a>
+        <a class="breadcrumb" href="/schools/new">New School</a>
       </div>
     </div>
-  </body>
+  </nav>
+  <div class="container">
+    {% for message in flash %}
+    <script>
+      M.toast({ html: '{{message.message}}' });
+    </script>
+    {% endfor %}
+
+    <h3>{{ title }}</h3>
+
+    <div class="row">
+      <form action="/schools/new" method="POST">
+        <label for="name">School Name</label>
+        <input name="name" type="text" />
+        <label for="name">School Address</label>
+        <input name="address" type="text" />
+        <input name="test" type="hidden" />
+        <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
+          Create School
+          <i class="material-icons right">send</i>
+        </button>
+      </form>
+      <a href="/schools/">← Return to schools view</a>
+    </div>
+  </div>
+</body>
+
 </html>

@@ -18,28 +18,35 @@ exports.getSchools = async (req, res) => {
 };
 
 exports.getSchool = async (req, res) => {
-  const schoolPostsQuery = `
-  SELECT posts.title, posts.body, posts.createDate, schools.name, schools.address, schools.id
-  FROM posts, schools
-  WHERE posts.schoolId=${req.params.id} AND posts.schoolId=schools.id
+  //! IMPLEMENT BUGFIX : When School is first created and has 0 posts, this query doesn't get school data. MUST FIX
+  const schooDataQuery = `
+  SELECT name, address, id
+  FROM schools
+  WHERE id=${req.params.id}
+  `;
+  const postDataQuery = `
+  SELECT posts.title, posts.body, posts.createDate
+  FROM posts
+  WHERE schoolId=${req.params.id}
   `;
   const client = await pool.connect();
   try {
-    const dbRes = await client.query(schoolPostsQuery);
-    const decodedPostRows = dbRes.rows.map((row) => {
+    const schoolData = await client.query(schooDataQuery);
+    const postData = await client.query(postDataQuery);
+    const decodedPostData = postData.rows.map((row) => {
       row.title = validator.unescape(row.title);
       row.body = validator.unescape(row.body);
       return row;
     })
-    const schoolData = {
-      id: dbRes.rows[0].id,
-      name: dbRes.rows[0].name,
-      address: dbRes.rows[0].address
+    const decodedSchoolData = {
+      id: schoolData.rows[0].id,
+      name: schoolData.rows[0].name,
+      address: schoolData.rows[0].address
     }
     res.render('school', {
-      schoolData,
-      title: dbRes.rows[0].name,
-      postData: decodedPostRows
+      title: decodedSchoolData.name,
+      schoolData: decodedSchoolData,
+      postData: decodedPostData
     });
   } catch (err) {
     console.log(err);
@@ -60,8 +67,8 @@ exports.addSchool = async (req, res) => {
   const { name, address, test } = req.body;
 
   if (!validator.isEmpty(name) && !validator.isEmpty(address) && validator.isEmpty(test)) {
+    const client = await pool.connect();
     try {
-      const client = await pool.connect();
       const dbRes = await client.query(`INSERT INTO schools (name, address) values('${name}', '${address}') RETURNING *`);
       req.flash('success', `${name} was added successfully! make a post?`);
       res.redirect(`/schools/${dbRes.rows[0].id}`);
