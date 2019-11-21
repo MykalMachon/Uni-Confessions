@@ -5,6 +5,7 @@ const validator = require('validator');
 // example route: /school/:schoolId/new
 // Gets the page that allows you to post 
 exports.getAddPost = (req, res) => {
+  console.log("got the add post page")
   res.render('newPost', { title: `Add a new post!`, data: { schoolId: req.params.id } });
 }
 
@@ -29,7 +30,7 @@ exports.addPost = async (req, res) => {
       client.release();
     }
   } else {
-    req.flash('error', `The body of your post can't be empty, try again!`);
-    res.redirect(`/schools/${schoolId}`);
+    req.flash('error', `Some of the data entered was invalid, try again!`);
+    res.redirect(`/schools/${schoolId}/new`);
   }
 }
