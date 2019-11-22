@@ -32,14 +32,14 @@
       <div class="row">
         <div class="col s12">
           <h3>{{title}}</h3>
-          <p>{{postData.body}} </p>
+          <p>{{postData.body}}</p>
         </div>
       </div>
 
       <div class="row"> 
         <div class="col"> 
           <p class="grey-text" style="display: flex; align-items: center;"> 
-            <i class="tiny material-icons">comment</i> 0 Comments
+            <i class="tiny material-icons">comment</i> {{commentData.length}} Comments
           </p>
         </div>
         <div class="col"> 
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <form action="/schools/{{schoolData.id}}/newComment" method="POST">
+      <form action="/schools/{{schoolData.id}}/{{postData.id}}/new" method="POST">
         <div class="row"> 
           <div class="input-field col s12"> 
             <label for="body">What do you think?</label>
@@ -70,8 +70,8 @@
       {% if commentData.length > 0 %}
         {% for comment in commentData %}
           <div class="row" style="margin-left: 24px;"> 
-            <p><b>{{comment.title}}</b></p>
             <p>{{comment.body}}</p>
+            <p class="grey-text">{{comment.createdate | date "%B %d, %Y"}}</p>
           </div>
         {% endfor %}
       {% else %}
