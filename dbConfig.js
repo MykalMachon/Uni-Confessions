@@ -65,4 +65,22 @@ const emptyDatabase = async () => {
   });
 };
 
-module.exports = { pool, rebuildDatabase };
+const createCommentTable = async () => {
+  const client = await pool.connect();
+  try {
+    await client.query(`CREATE TABLE Comment (
+      ID SERIAL PRIMARY KEY,
+      body VARCHAR(512) NOT NULL,
+      createDate date NOT NULL,
+      postId INTEGER NOT NULL REFERENCES posts(id),
+      deviceId VARCHAR(128) NOT NULL)`);
+    console.log('comment table was made');
+  } catch (err) {
+    console.log(err);
+    console.log("couldn't create Comment table");
+  } finally {
+    client.release();
+  }
+};
+
+module.exports = { pool, rebuildDatabase, createCommentTable };

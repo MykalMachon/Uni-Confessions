@@ -16,23 +16,35 @@ exports.getPostPage = async (req, res) => {
   const client = await pool.connect();
   try {
     const postDataQuery = `
-    SELECT title, body, createDate, deviceId
+    SELECT id, title, body, createDate, deviceId
     FROM posts
     WHERE id=${postId} 
     `;
+    const commentDataQuery = `
+    SELECT id, body, createDate, deviceId
+    FROM Comment
+    WHERE postId=${postId}
+    `;
     const postData = await client.query(postDataQuery);
+    const commentData = await client.query(commentDataQuery);
     const decodedPostData = {
       id: postData.rows[0].id,
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
     };
+    const decodedCommentData = commentData.rows.map((comment) => {
+      comment.body = validator.unescape(comment.body);
+      return comment;
+    });
     res.render('post', {
       postData: decodedPostData,
-      schoolData: { id: schoolId, },
+      commentData: decodedCommentData,
+      schoolData: { id: schoolId },
       title: decodedPostData.title,
     });
   } catch (err) {
+    console.log(err);
     res.redirect(`/schools/${schoolId}`);
   } finally {
     client.release();

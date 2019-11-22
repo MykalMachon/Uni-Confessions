@@ -3,6 +3,7 @@ var router = express.Router();
 
 const schoolController = require('../controllers/schoolController');
 const postController = require('../controllers/postController');
+const commentController = require('../controllers/commentController');
 
 // Get the home page
 router.get('/', (req, res, next) => {
@@ -16,8 +17,9 @@ router.get('/schools/:id/new', postController.getAddPost);
 // Post School Pages
 router.post(`/schools/new`, schoolController.addSchool);
 router.post(`/schools/:id/new`, postController.addPost);
-
-// Get Home Pages
+// Get Post Pages
 router.get('/schools/:id/:postId', postController.getPostPage);
+// Post Comments
+router.post('/schools/:id/:postId/new', commentController.addComment);
 
 module.exports = router;
