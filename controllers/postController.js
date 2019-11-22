@@ -25,7 +25,7 @@ exports.getPostPage = async (req, res) => {
       id: postData.rows[0].id,
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
-      createDate: postData.rows[0].createDate,
+      createDate: postData.rows[0].createdate,
     };
     res.render('post', {
       postData: decodedPostData,

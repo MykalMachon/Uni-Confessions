@@ -35,6 +35,51 @@
           <p>{{postData.body}} </p>
         </div>
       </div>
+
+      <div class="row"> 
+        <div class="col"> 
+          <p class="grey-text" style="display: flex; align-items: center;"> 
+            <i class="tiny material-icons">comment</i> 0 Comments
+          </p>
+        </div>
+        <div class="col"> 
+          <p class="grey-text" style="display: flex; align-items: center;"> 
+            <i class="tiny material-icons">access_time</i> {{postData.createDate | date: "%B %d, %Y"}}
+          </p>
+        </div>
+      </div>
+
+      <form action="/schools/{{schoolData.id}}/newComment" method="POST">
+        <div class="row"> 
+          <div class="input-field col s12"> 
+            <label for="body">What do you think?</label>
+            <textarea name="body" class="materialize-textarea"></textarea>
+          </div>
+          <div class="col s12"> 
+            <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
+              Post Comment
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="divider"> </div>
+
+
+      {% if commentData.length > 0 %}
+        {% for comment in commentData %}
+          <div class="row" style="margin-left: 24px;"> 
+            <p><b>{{comment.title}}</b></p>
+            <p>{{comment.body}}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="row"> 
+          <p>There aren't any comments on this post yet! leave one!</p>
+        </div>
+      {% endif %} 
+      
     </div>
   </body>
 </html>
