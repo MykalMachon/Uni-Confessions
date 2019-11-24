@@ -1,7 +1,16 @@
+// importing the pool object which is used to connect to our SQL database
 const { pool } = require('../dbConfig');
+// importing a package that handles input validation
 const validator = require('validator');
 
 // * GET REQUESTS
+
+/**
+ * getSchools
+ *
+ * gets all schools and passes them into the schools.liquid view to be
+ * rendered on the client.
+ */
 exports.getSchools = async (req, res) => {
   const client = await pool.connect();
   try {
@@ -16,6 +25,12 @@ exports.getSchools = async (req, res) => {
   }
 };
 
+/**
+ * getSchool
+ *
+ * gets all data relevant to a school forum page and passes it into the
+ * school.liquid view (this includes school metadata and comments)
+ */
 exports.getSchool = async (req, res) => {
   const schooDataQuery = `
   SELECT name, address, id
@@ -56,11 +71,22 @@ exports.getSchool = async (req, res) => {
   }
 };
 
+/**
+ * getAddSchool
+ *
+ * renders the view containing the add school form (newSchool.liquid)
+ */
 exports.getAddSchool = (req, res) => {
   res.render('newSchool', { title: `Add a new school!` });
 };
 
 // * POST REQUESTS
+
+/**
+ * addSchool
+ *
+ * handles and validates a post request made to the server and
+ */
 exports.addSchool = async (req, res) => {
   const { name, address, test } = req.body;
 
