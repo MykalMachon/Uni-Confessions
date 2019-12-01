@@ -27,6 +27,8 @@ exports.getPostPage = async (req, res) => {
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
+      canDeletePost:
+        req.cookies.deviceId == postData.rows[0].deviceid ? true : false,
       votes: postData.rows[0].count,
       voteId: postData.rows[0].voteid,
     };
@@ -41,6 +43,8 @@ exports.getPostPage = async (req, res) => {
     const commentData = await client.query(commentDataQuery);
     const decodedCommentData = commentData.rows.map((comment) => {
       comment.body = validator.unescape(comment.body);
+      comment.canDeleteComment =
+        req.cookies.deviceId == comment.deviceid ? true : false;
       return comment;
     });
 
@@ -97,5 +101,32 @@ exports.addPost = async (req, res) => {
   } else {
     req.flash('error', `Some of the data entered was invalid, try again!`);
     res.redirect(`/schools/${schoolId}/new`);
+  }
+};
+
+exports.removePost = async (req, res) => {
+  const { postId } = req.body;
+  const deviceId = req.cookies.deviceId;
+
+  const client = await pool.connect();
+  try {
+    const post = await client.query(
+      `SELECT deviceId FROM Post WHERE id=${postId}`
+    );
+    if (deviceId == post.rows[0].deviceid) {
+      await client.query(`DELETE FROM Comment WHERE postId=${postId}`);
+      await client.query(`DELETE FROM Post WHERE id=${postId}`);
+      req.flash(`success`, `Success! Your Post was deleted.`);
+    } else {
+      throw new Error(`Client wasn't properly authenticated`);
+    }
+  } catch (err) {
+    req.flash(
+      `error`,
+      `Whoops! Something went wrong while deleting your Post. Try again later.`
+    );
+  } finally {
+    client.release();
+    res.redirect(`/schools/`);
   }
 };

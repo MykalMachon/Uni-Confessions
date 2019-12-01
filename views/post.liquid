@@ -50,6 +50,14 @@
         <div class="col s11">
           <h3>{{title}}</h3>
           <p>{{postData.body}}</p>
+          {% if postData.canDeletePost %}
+            <form action="/delete/post" method="POST">
+              <input type="hidden" name="postId" value="{{postData.id}}">
+              <button class="waves-effect waves-light btn-small red">
+                Delete this post <i class="material-icons left">delete</i>
+              </button> 
+            </form>
+          {% endif %}
         </div>
       </div>
 
@@ -110,6 +118,14 @@
             <div class="col s11">
               <p>{{comment.body}}</p>
               <p class="grey-text">{{comment.createdate | date "%B %d, %Y"}}</p>
+              {% if comment.canDeleteComment %}
+                <form action="/delete/comment" method="POST">
+                  <input type="hidden" name="commentId" value="{{comment.id}}">
+                  <button class="waves-effect waves-light btn-small red">
+                    Delete this Comment<i class="material-icons left">delete</i>
+                  </button> 
+                </form>
+              {% endif %}
             </div>
           </div>
         {% endfor %}

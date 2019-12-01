@@ -32,32 +32,37 @@ exports.getSchools = async (req, res) => {
  * school.liquid view (this includes school metadata and comments)
  */
 exports.getSchool = async (req, res) => {
+  const client = await pool.connect();
+
   const schooDataQuery = `
   SELECT name, address, id
   FROM School
   WHERE id=${req.params.id}
   `;
+
   const postDataQuery = `
-  SELECT p.id, p.title, p.body, p.createDate, v.count as voteCount, v.id as voteId 
+  SELECT p.id, p.title, p.body, p.createDate, v.count as voteCount, v.id as voteId, p.deviceId
   FROM Post as p, VoteCount as v
   WHERE p.schoolId=${req.params.id} AND p.voteCount=v.id 
   ORDER BY v.count DESC
   `;
-  const client = await pool.connect();
   try {
     const schoolData = await client.query(schooDataQuery);
-    const postData = await client.query(postDataQuery);
-    const decodedPostData = postData.rows.map((row) => {
-      row.id = row.id;
-      row.title = validator.unescape(row.title);
-      row.body = validator.unescape(row.body);
-      return row;
-    });
     const decodedSchoolData = {
       id: schoolData.rows[0].id,
       name: schoolData.rows[0].name,
       address: schoolData.rows[0].address,
     };
+
+    const postData = await client.query(postDataQuery);
+    const decodedPostData = postData.rows.map((row) => {
+      row.id = row.id;
+      row.title = validator.unescape(row.title);
+      row.body = validator.unescape(row.body);
+      row.canDeletePost = req.cookies.deviceId == row.deviceid ? true : false;
+      return row;
+    });
+
     res.render('school', {
       title: decodedSchoolData.name,
       schoolData: decodedSchoolData,
