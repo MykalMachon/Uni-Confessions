@@ -16,34 +16,34 @@
           var instances = M.Sidenav.init(elems);
         });
       </script>
-    </head>
-  
-    <body>
-      <nav class="grey darken-4">
-        <div class="nav-wrapper container">
-          <a class="" href="/schools/">Uni Confessions</a>
-          <a class="sidenav-trigger" data-target="mobile-nav" href="#">
-            <i class="material-icons">menu</i>
-          </a>
-          <ul class="right hide-on-med-and-down">
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/schools/">Schools</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-  
-      <ul class="sidenav" id="mobile-nav">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/schools/">Schools</a>
-        </li>
-      </ul>
+  </head>
+
+  <body>
+    <nav class="grey darken-4">
+      <div class="nav-wrapper container">
+        <a class="" href="/schools/">Uni Confessions</a>
+        <a class="sidenav-trigger" data-target="mobile-nav" href="#">
+          <i class="material-icons">menu</i>
+        </a>
+        <ul class="right hide-on-med-and-down">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/schools/">Schools</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <ul class="sidenav" id="mobile-nav">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/schools/">Schools</a>
+      </li>
+    </ul>
     <div class="container">
       {% for message in flash %}
         <script>
@@ -76,8 +76,9 @@
             <form action="/delete/post" method="POST">
               <input type="hidden" name="postId" value="{{postData.id}}">
               <button class="waves-effect waves-light btn-small red">
-                Delete this post <i class="material-icons left">delete</i>
-              </button> 
+                Delete this post
+                <i class="material-icons left">delete</i>
+              </button>
             </form>
           {% endif %}
         </div>
@@ -106,7 +107,7 @@
             <textarea class="materialize-textarea" name="body"></textarea>
           </div>
           <div class="col s12">
-            <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
+            <button class="btn waves-effect waves-light grey darken-4" name="action" type="submit">
               Post Comment
               <i class="material-icons right">send</i>
             </button>
@@ -145,7 +146,7 @@
                   <input type="hidden" name="commentId" value="{{comment.id}}">
                   <button class="waves-effect waves-light btn-small red">
                     Delete this Comment<i class="material-icons left">delete</i>
-                  </button> 
+                  </button>
                 </form>
               {% endif %}
             </div>
