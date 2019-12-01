@@ -38,9 +38,10 @@ exports.getSchool = async (req, res) => {
   WHERE id=${req.params.id}
   `;
   const postDataQuery = `
-  SELECT id, title, body, createDate
-  FROM Post
-  WHERE schoolId=${req.params.id}
+  SELECT p.id, p.title, p.body, p.createDate, v.count as voteCount, v.id as voteId 
+  FROM Post as p, VoteCount as v
+  WHERE p.schoolId=${req.params.id} AND p.voteCount=v.id 
+  ORDER BY v.count DESC
   `;
   const client = await pool.connect();
   try {

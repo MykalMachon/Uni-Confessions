@@ -35,6 +35,7 @@ exports.getPostPage = async (req, res) => {
     SELECT c.id, c.body, c.createDate, c.deviceId, v.id as voteId, v.count
     FROM Comment as c, VoteCount as v
     WHERE postId=${postId} and v.id = c.voteCount
+    ORDER BY v.count DESC
     `;
 
     const commentData = await client.query(commentDataQuery);
