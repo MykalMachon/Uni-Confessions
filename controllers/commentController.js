@@ -43,3 +43,22 @@ exports.addComment = async (req, res) => {
     res.redirect('back');
   }
 };
+
+exports.removeComment = async (req, res) => {
+  const { commentId } = req.body;
+  const deviceId = req.cookies.deviceId;
+
+  const client = await pool.connect();
+  try {
+    await client.query(`DELETE FROM Comment WHERE id=${commentId}`);
+    req.flash(`success`, `Success! Your comment was deleted.`);
+  } catch (err) {
+    req.flash(
+      `error`,
+      `Whoops! Something went wrong while deleting your comment. Try again later.`
+    );
+  } finally {
+    client.release();
+    res.redirect('back');
+  }
+};

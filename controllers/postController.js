@@ -103,3 +103,9 @@ exports.addPost = async (req, res) => {
     res.redirect(`/schools/${schoolId}/new`);
   }
 };
+
+exports.removePost = async (req, res) => {
+  res.json({
+    works: 'it does!',
+  });
+};
