@@ -8,7 +8,7 @@ const upvtoteController = require('../controllers/upvoteController');
 
 // Get the home page
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'UFV Confessions' });
+  res.redirect('/schools/');
 });
 
 // Get School pages

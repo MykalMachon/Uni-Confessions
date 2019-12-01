@@ -8,20 +8,42 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+    <script> 
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+      });
+    </script>
   </head>
 
   <body>
-    <nav class="deep-purple darken-2">
+    <nav class="grey darken-4">
       <div class="nav-wrapper container">
-        <div class="col s12">
-          <a class="breadcrumb" href="/">University Confessions</a>
-          <a class="breadcrumb" href="/schools/">Schools</a>
-          <a class="breadcrumb" href="/schools/{{schoolData.id}}">{{schoolData.name}}</a>
-        </div>
+        <a class="" href="/schools/">Uni Confessions</a>
+        <a class="sidenav-trigger" data-target="mobile-nav" href="#">
+          <i class="material-icons">menu</i>
+        </a>
+        <ul class="right hide-on-med-and-down">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/schools/">Schools</a>
+          </li>
+        </ul>
       </div>
     </nav>
+
+    <ul class="sidenav" id="mobile-nav">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/schools/">Schools</a>
+      </li>
+    </ul>
     <div class="container">
       {% for message in flash %}
         <script>
@@ -40,7 +62,7 @@
           <p>{{schoolData.address}}</p>
         </div>
         <div class="col s6 m6">
-          <a href="{{schoolData.id}}/new" class="waves-effect waves-light deep-purple darken-2 btn right">
+          <a href="{{schoolData.id}}/new" class="waves-effect waves-light grey darken-4 btn right">
             CREATE NEW POST
             <i class="material-icons right">add_circle</i>
           </a>
