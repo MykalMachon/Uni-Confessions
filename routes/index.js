@@ -4,6 +4,7 @@ var router = express.Router();
 const schoolController = require('../controllers/schoolController');
 const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
+const upvtoteController = require('../controllers/upvoteController');
 
 // Get the home page
 router.get('/', (req, res, next) => {
@@ -21,5 +22,7 @@ router.post(`/schools/:id/new`, postController.addPost);
 router.get('/schools/:id/:postId', postController.getPostPage);
 // Post Comments
 router.post('/schools/:id/:postId/new', commentController.addComment);
+// Vote on Posts or Comments
+router.post('/vote/', upvtoteController.updateVote);
 
 module.exports = router;

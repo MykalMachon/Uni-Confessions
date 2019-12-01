@@ -20,27 +20,29 @@ exports.getPostPage = async (req, res) => {
     FROM Post as p, VoteCount as v
     WHERE p.id=${postId} and v.id = p.voteCount 
     `;
-    const commentDataQuery = `
-    SELECT c.id, c.body, c.createDate, c.deviceId, v.id as voteId, v.count
-    FROM Comment as c, VoteCount as v
-    WHERE postId=${postId} and v.id = c.voteCount
-    `;
+
     const postData = await client.query(postDataQuery);
-    const commentData = await client.query(commentDataQuery);
     const decodedPostData = {
       id: postData.rows[0].id,
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
       votes: postData.rows[0].count,
-      voteId: postData.rows[0].voteId,
+      voteId: postData.rows[0].voteid,
     };
+
+    const commentDataQuery = `
+    SELECT c.id, c.body, c.createDate, c.deviceId, v.id as voteId, v.count
+    FROM Comment as c, VoteCount as v
+    WHERE postId=${postId} and v.id = c.voteCount
+    `;
+
+    const commentData = await client.query(commentDataQuery);
     const decodedCommentData = commentData.rows.map((comment) => {
       comment.body = validator.unescape(comment.body);
-      comment.votes = postData.rows[0].count;
-      comment.voteId = postData.rows[0].voteId;
       return comment;
     });
+
     res.render('post', {
       postData: decodedPostData,
       commentData: decodedCommentData,
@@ -53,9 +55,6 @@ exports.getPostPage = async (req, res) => {
   } finally {
     client.release();
   }
-  // Get Post Data
-  // Get Post Comments
-  // Render Post Page with Post Data
 };
 
 // * POST REQUESTS
