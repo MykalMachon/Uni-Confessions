@@ -17,7 +17,7 @@ exports.getPostPage = async (req, res) => {
   try {
     const postDataQuery = `
     SELECT id, title, body, createDate, deviceId
-    FROM posts
+    FROM Post
     WHERE id=${postId} 
     `;
     const commentDataQuery = `
@@ -66,16 +66,22 @@ exports.addPost = async (req, res) => {
   ) {
     const client = await pool.connect();
     try {
-      const dbRes = await client.query(`INSERT INTO posts (title, body, createDate, schoolId, deviceId) values (
+      const newUpvoteCount = await client.query(
+        `INSERT INTO VoteCount (count) VALUES ('0') RETURNING ID`
+      );
+      console.log(`New Upvote Count ID : ${newUpvoteCount.rows[0].id}`);
+      await client.query(`INSERT INTO Post (title, body, createDate, voteCount, schoolId, deviceId) values (
         '${validator.escape(title.trim())}',
         '${validator.escape(body.trim())}',
         '${new Date().toDateString()}',
+        '${newUpvoteCount.rows[0].id}',
         '${schoolId}',
         '${req.cookies.deviceId}'
         )`);
       req.flash('success', `Your post was made!`);
       res.redirect(`/schools/${schoolId}`);
     } catch (err) {
+      console.log(err);
       req.flash(
         'error',
         `Oh no! something went wrong when creating your post!`

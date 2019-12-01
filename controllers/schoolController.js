@@ -14,7 +14,7 @@ const validator = require('validator');
 exports.getSchools = async (req, res) => {
   const client = await pool.connect();
   try {
-    const dbRes = await client.query(`SELECT * FROM schools`);
+    const dbRes = await client.query(`SELECT * FROM School`);
     res.render('schools', { schoolData: dbRes.rows, title: 'Schools' });
   } catch (err) {
     console.log(err);
@@ -34,12 +34,12 @@ exports.getSchools = async (req, res) => {
 exports.getSchool = async (req, res) => {
   const schooDataQuery = `
   SELECT name, address, id
-  FROM schools
+  FROM School
   WHERE id=${req.params.id}
   `;
   const postDataQuery = `
-  SELECT posts.id, posts.title, posts.body, posts.createDate
-  FROM posts
+  SELECT id, title, body, createDate
+  FROM Post
   WHERE schoolId=${req.params.id}
   `;
   const client = await pool.connect();
@@ -98,7 +98,7 @@ exports.addSchool = async (req, res) => {
     const client = await pool.connect();
     try {
       const dbRes = await client.query(
-        `INSERT INTO schools (name, address, deviceId) values('${name}', '${address}', '${req.cookies.deviceId}') RETURNING *`
+        `INSERT INTO School (name, address, deviceId) values('${name}', '${address}', '${req.cookies.deviceId}') RETURNING *`
       );
       req.flash('success', `${name} was added successfully! make a post?`);
       res.redirect(`/schools/${dbRes.rows[0].id}`);
