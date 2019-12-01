@@ -27,6 +27,8 @@ exports.getPostPage = async (req, res) => {
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
+      canDeletePost:
+        req.cookies.deviceId == postData.rows[0].deviceid ? true : false,
       votes: postData.rows[0].count,
       voteId: postData.rows[0].voteid,
     };
@@ -41,6 +43,8 @@ exports.getPostPage = async (req, res) => {
     const commentData = await client.query(commentDataQuery);
     const decodedCommentData = commentData.rows.map((comment) => {
       comment.body = validator.unescape(comment.body);
+      comment.canDeleteComment =
+        req.cookies.deviceId == comment.deviceid ? true : false;
       return comment;
     });
 
