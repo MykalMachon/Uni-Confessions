@@ -16,27 +16,34 @@ exports.getPostPage = async (req, res) => {
   const client = await pool.connect();
   try {
     const postDataQuery = `
-    SELECT id, title, body, createDate, deviceId
-    FROM posts
-    WHERE id=${postId} 
+    SELECT p.id, p.title, p.body, p.createDate, v.id as voteId, v.count, p.deviceId
+    FROM Post as p, VoteCount as v
+    WHERE p.id=${postId} and v.id = p.voteCount 
     `;
-    const commentDataQuery = `
-    SELECT id, body, createDate, deviceId
-    FROM Comment
-    WHERE postId=${postId}
-    `;
+
     const postData = await client.query(postDataQuery);
-    const commentData = await client.query(commentDataQuery);
     const decodedPostData = {
       id: postData.rows[0].id,
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
+      votes: postData.rows[0].count,
+      voteId: postData.rows[0].voteid,
     };
+
+    const commentDataQuery = `
+    SELECT c.id, c.body, c.createDate, c.deviceId, v.id as voteId, v.count
+    FROM Comment as c, VoteCount as v
+    WHERE postId=${postId} and v.id = c.voteCount
+    ORDER BY v.count DESC
+    `;
+
+    const commentData = await client.query(commentDataQuery);
     const decodedCommentData = commentData.rows.map((comment) => {
       comment.body = validator.unescape(comment.body);
       return comment;
     });
+
     res.render('post', {
       postData: decodedPostData,
       commentData: decodedCommentData,
@@ -49,9 +56,6 @@ exports.getPostPage = async (req, res) => {
   } finally {
     client.release();
   }
-  // Get Post Data
-  // Get Post Comments
-  // Render Post Page with Post Data
 };
 
 // * POST REQUESTS
@@ -66,16 +70,22 @@ exports.addPost = async (req, res) => {
   ) {
     const client = await pool.connect();
     try {
-      const dbRes = await client.query(`INSERT INTO posts (title, body, createDate, schoolId, deviceId) values (
+      const newUpvoteCount = await client.query(
+        `INSERT INTO VoteCount (count) VALUES ('0') RETURNING ID`
+      );
+      console.log(`New Upvote Count ID : ${newUpvoteCount.rows[0].id}`);
+      await client.query(`INSERT INTO Post (title, body, createDate, voteCount, schoolId, deviceId) values (
         '${validator.escape(title.trim())}',
         '${validator.escape(body.trim())}',
         '${new Date().toDateString()}',
+        '${newUpvoteCount.rows[0].id}',
         '${schoolId}',
         '${req.cookies.deviceId}'
         )`);
       req.flash('success', `Your post was made!`);
       res.redirect(`/schools/${schoolId}`);
     } catch (err) {
+      console.log(err);
       req.flash(
         'error',
         `Oh no! something went wrong when creating your post!`

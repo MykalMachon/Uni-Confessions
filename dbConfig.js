@@ -9,44 +9,6 @@ const pool = new Pool({
   ssl: true,
 });
 
-const rebuildDatabase = async () => {
-  await pool.query(
-    `CREATE TABLE schools (
-      ID SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      address VARCHAR(255) NOT NULL,
-      deviceId VARCHAR(128) NOT NULL
-    );`,
-    (err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log('created table schools');
-        console.log(res);
-      }
-    }
-  );
-
-  await pool.query(
-    `CREATE TABLE posts (
-      ID SERIAL PRIMARY KEY,
-      title VARCHAR(128) NOT NULL,
-      body VARCHAR(512) NOT NULL,
-      createDate date NOT NULL,
-      schoolId INTEGER NOT NULL REFERENCES schools(id),
-      deviceId VARCHAR(128) NOT NULL
-    );`,
-    (err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log('created table posts');
-        console.log(res);
-      }
-    }
-  );
-};
-
 const emptyDatabase = async () => {
   await pool.query(`DELETE FROM schools`, (err, res) => {
     if (err) {
@@ -65,22 +27,48 @@ const emptyDatabase = async () => {
   });
 };
 
-const createCommentTable = async () => {
+const buildDatabaseStruct = async () => {
   const client = await pool.connect();
   try {
-    await client.query(`CREATE TABLE Comment (
+    await client.query(`
+    CREATE TABLE School (
       ID SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      address VARCHAR(255) NOT NULL,
+      deviceId VARCHAR(128) NOT NULL)`);
+    console.log(`School table was created...`);
+
+    await client.query(`
+    CREATE TABLE VoteCount (
+      ID SERIAL PRIMARY KEY,
+      count INTEGER DEFAULT 0)`);
+    console.log(`VoteCount table was created...`);
+
+    await client.query(`
+    CREATE TABLE Post(
+      ID SERIAL PRIMARY KEY,
+      title VARCHAR(128) NOT NULL,
       body VARCHAR(512) NOT NULL,
       createDate date NOT NULL,
-      postId INTEGER NOT NULL REFERENCES posts(id),
+      voteCount INTEGER NOT NULL REFERENCES VoteCount(id),
+      schoolId INTEGER NOT NULL REFERENCES School(id),
       deviceId VARCHAR(128) NOT NULL)`);
-    console.log('comment table was made');
+    console.log(`Post table was created...`);
+
+    await client.query(`CREATE TABLE Comment(
+      ID SERIAL PRIMARY KEY,
+      body VARCHAR(255) NOT NULL,
+      createDate date NOT NULL,
+      voteCount INTEGER NOT NULL REFERENCES VoteCount(id),
+      postId INTEGER NOT NULL REFERENCES Post(id),
+      deviceId VARCHAR(128) NOT NULL)`);
+    console.log(`Comment table was created`);
   } catch (err) {
     console.log(err);
-    console.log("couldn't create Comment table");
+    console.log("couldn't create all tables");
   } finally {
     client.release();
   }
 };
 
-module.exports = { pool, rebuildDatabase, createCommentTable };
+module.exports = { pool, buildDatabaseStruct };

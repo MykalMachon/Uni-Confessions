@@ -30,32 +30,52 @@
       {% endfor %}
 
       <div class="row">
-        <div class="col s12">
+        <div class="col s1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 2rem;">
+          <form action="/vote/" method="POST" style="margin: 0px;">
+            <input type="hidden" name="voteId" value="{{postData.voteId}}">
+            <input name="action" type="hidden" value="upvote">
+            <button style="border: 0px; background: white; cursor: pointer;">
+              <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+          </form>
+          {{postData.votes}}
+          <form action="/vote/" method="POST" style="margin: 0px;">
+            <input type="hidden" name="voteId" value="{{postData.voteId}}">
+            <input name="action" type="hidden" value="downvote">
+            <button style="border: 0px; background: white; cursor: pointer;">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+          </form>
+        </div>
+        <div class="col s11">
           <h3>{{title}}</h3>
           <p>{{postData.body}}</p>
         </div>
       </div>
 
-      <div class="row"> 
-        <div class="col"> 
-          <p class="grey-text" style="display: flex; align-items: center;"> 
-            <i class="tiny material-icons">comment</i> {{commentData.length}} Comments
+      <div class="row">
+        <div class="col">
+          <p class="grey-text" style="display: flex; align-items: center;">
+            <i class="tiny material-icons">comment</i>
+            {{commentData.length}}
+            Comments
           </p>
         </div>
-        <div class="col"> 
-          <p class="grey-text" style="display: flex; align-items: center;"> 
-            <i class="tiny material-icons">access_time</i> {{postData.createDate | date: "%B %d, %Y"}}
+        <div class="col">
+          <p class="grey-text" style="display: flex; align-items: center;">
+            <i class="tiny material-icons">access_time</i>
+            {{postData.createDate | date: "%B %d, %Y"}}
           </p>
         </div>
       </div>
 
       <form action="/schools/{{schoolData.id}}/{{postData.id}}/new" method="POST">
-        <div class="row"> 
-          <div class="input-field col s12"> 
+        <div class="row">
+          <div class="input-field col s12">
             <label for="body">What do you think?</label>
-            <textarea name="body" class="materialize-textarea"></textarea>
+            <textarea class="materialize-textarea" name="body"></textarea>
           </div>
-          <div class="col s12"> 
+          <div class="col s12">
             <button class="btn waves-effect waves-light deep-purple darken-2" name="action" type="submit">
               Post Comment
               <i class="material-icons right">send</i>
@@ -64,22 +84,41 @@
         </div>
       </form>
 
-      <div class="divider"> </div>
+      <div class="divider"></div>
 
 
       {% if commentData.length > 0 %}
         {% for comment in commentData %}
-          <div class="row" style="margin-left: 24px;"> 
-            <p>{{comment.body}}</p>
-            <p class="grey-text">{{comment.createdate | date "%B %d, %Y"}}</p>
+          <div class="row">
+            <div class="col s1" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <form action="/vote/" method="POST" style="margin: 0px;">
+                <input type="hidden" name="voteId" value="{{comment.voteid}}">
+                <input name="action" type="hidden" value="upvote">
+                <button style="border: 0px; background: white; cursor: pointer;">
+                  <i class="material-icons">keyboard_arrow_up</i>
+                </button>
+              </form>
+              {{comment.count}}
+              <form action="/vote/" method="POST" style="margin: 0px;">
+                <input type="hidden" name="voteId" value="{{comment.voteid}}">
+                <input name="action" type="hidden" value="downvote">
+                <button style="border: 0px; background: white; cursor: pointer;">
+                  <i class="material-icons">keyboard_arrow_down</i>
+                </button>
+              </form>
+            </div>
+            <div class="col s11">
+              <p>{{comment.body}}</p>
+              <p class="grey-text">{{comment.createdate | date "%B %d, %Y"}}</p>
+            </div>
           </div>
         {% endfor %}
       {% else %}
-        <div class="row"> 
+        <div class="row">
           <p>There aren't any comments on this post yet! leave one!</p>
         </div>
-      {% endif %} 
-      
+      {% endif %}
+
     </div>
   </body>
 </html>

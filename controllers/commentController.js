@@ -14,11 +14,15 @@ exports.addComment = async (req, res) => {
   const client = await pool.connect();
   if (!validator.isEmpty(body)) {
     try {
+      const newUpvoteCount = await client.query(
+        `INSERT INTO VoteCount (count) VALUES ('0') RETURNING ID`
+      );
       const commentInsertQuery = `
-        INSERT INTO Comment (body, createDate, postId, deviceId)
+        INSERT INTO Comment (body, createDate, voteCount, postId, deviceId)
         VALUES (
           '${validator.escape(body.trim())}',
           '${new Date().toDateString()}',
+          '${newUpvoteCount.rows[0].id}',
           '${postId}',
           '${deviceId}'
       )`;
