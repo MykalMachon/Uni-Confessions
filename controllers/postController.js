@@ -16,14 +16,14 @@ exports.getPostPage = async (req, res) => {
   const client = await pool.connect();
   try {
     const postDataQuery = `
-    SELECT id, title, body, createDate, deviceId
-    FROM Post
-    WHERE id=${postId} 
+    SELECT p.id, p.title, p.body, p.createDate, v.id as voteId, v.count, p.deviceId
+    FROM Post as p, VoteCount as v
+    WHERE p.id=${postId} and v.id = p.voteCount 
     `;
     const commentDataQuery = `
-    SELECT id, body, createDate, deviceId
-    FROM Comment
-    WHERE postId=${postId}
+    SELECT c.id, c.body, c.createDate, c.deviceId, v.id as voteId, v.count
+    FROM Comment as c, VoteCount as v
+    WHERE postId=${postId} and v.id = c.voteCount
     `;
     const postData = await client.query(postDataQuery);
     const commentData = await client.query(commentDataQuery);
@@ -32,9 +32,13 @@ exports.getPostPage = async (req, res) => {
       title: validator.unescape(postData.rows[0].title),
       body: validator.unescape(postData.rows[0].body),
       createDate: postData.rows[0].createdate,
+      votes: postData.rows[0].count,
+      voteId: postData.rows[0].voteId,
     };
     const decodedCommentData = commentData.rows.map((comment) => {
       comment.body = validator.unescape(comment.body);
+      comment.votes = postData.rows[0].count;
+      comment.voteId = postData.rows[0].voteId;
       return comment;
     });
     res.render('post', {

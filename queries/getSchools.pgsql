@@ -1,5 +1,5 @@
-SELECT schools.name as School, posts.title, posts.body, posts.createDate
-FROM schools, posts
+SELECT School.name as School, Post.title, Post.body, Post.createDate
+FROM School, Post
 WHERE 
-  schools.id=posts.schoolid 
-  and schools.name='University of the Fraser Valley';
+  School.id=Post.schoolid 
+  and School.name='University of the Fraser Valley'; 
