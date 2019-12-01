@@ -10,23 +10,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-  </head>
-
-  <body>
-    <nav class="deep-purple darken-2">
-      <div class="nav-wrapper container">
-        <div class="col s12">
-          <a class="breadcrumb" href="/">University Confessions</a>
-          <a class="breadcrumb" href="/schools/">Schools</a>
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+          var elems = document.querySelectorAll('.sidenav');
+          var instances = M.Sidenav.init(elems);
+        });
+      </script>
+    </head>
+  
+    <body>
+      <nav class="grey darken-4">
+        <div class="nav-wrapper container">
+          <a class="" href="/schools/">Uni Confessions</a>
+          <a class="sidenav-trigger" data-target="mobile-nav" href="#">
+            <i class="material-icons">menu</i>
+          </a>
+          <ul class="right hide-on-med-and-down">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/schools/">Schools</a>
+            </li>
+          </ul>
         </div>
-      </div>
-    </nav>
+      </nav>
+  
+      <ul class="sidenav" id="mobile-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/schools/">Schools</a>
+        </li>
+      </ul>
     <div class="container">
       {% for message in flash %}
         <script>
           M.toast({html: '{{message.message}}'});
         </script>
       {% endfor %}
+
+      <div class="row" style="margin: 24px 0px 24px 0px;">
+          <div class="col s12 m12">
+            <div class="card-panel grey lighten-3">
+              <h5 style="margin-top: 0px;">Welcome to Uni Confessions</h5>
+              <span class="">
+                Uni Confessions is a project for COMP 230. <br />
+                It allows users to anonymously discuss university by posting, commenting, and through general discussion like any forum would.<br /><br />
+                Each school has posts, and each post has comments. <br /> All content is sorted by votes so make sure to upvote interesting posts & comments!
+              </span>
+            </div>
+          </div>
+        </div>
 
       <h3>{{title}}</h3>
 
