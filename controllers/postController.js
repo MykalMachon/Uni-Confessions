@@ -105,7 +105,28 @@ exports.addPost = async (req, res) => {
 };
 
 exports.removePost = async (req, res) => {
-  res.json({
-    works: 'it does!',
-  });
+  const { postId } = req.body;
+  const deviceId = req.cookies.deviceId;
+
+  const client = await pool.connect();
+  try {
+    const post = await client.query(
+      `SELECT deviceId FROM Post WHERE id=${postId}`
+    );
+    if (deviceId == post.rows[0].deviceid) {
+      await client.query(`DELETE FROM Comment WHERE postId=${postId}`);
+      await client.query(`DELETE FROM Post WHERE id=${postId}`);
+      req.flash(`success`, `Success! Your Post was deleted.`);
+    } else {
+      throw new Error(`Client wasn't properly authenticated`);
+    }
+  } catch (err) {
+    req.flash(
+      `error`,
+      `Whoops! Something went wrong while deleting your Post. Try again later.`
+    );
+  } finally {
+    client.release();
+    res.redirect(`/schools/`);
+  }
 };
