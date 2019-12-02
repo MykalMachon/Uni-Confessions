@@ -70,7 +70,7 @@ exports.searchPosts = async (req, res) => {
     const searchQuery = `
       SELECT p.id, p.title, p.createDate, p.schoolId, v.id as voteId, v.count
       FROM Post as p, VoteCount as v 
-      WHERE p.schoolId=${schoolId} and v.id = p.voteCount and (p.title like '%${searchTerm}%' or p.body like '%${searchTerm}%')
+      WHERE p.schoolId=${schoolId} and v.id = p.voteCount and (upper(p.title) like '%${searchTerm.toUpperCase()}%' or upper(p.body) like '%${searchTerm.toUpperCase()}%')
     `;
     const searchResults = await client.query(searchQuery);
 
