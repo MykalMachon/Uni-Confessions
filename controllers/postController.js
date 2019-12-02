@@ -55,8 +55,46 @@ exports.getPostPage = async (req, res) => {
       title: decodedPostData.title,
     });
   } catch (err) {
-    console.log(err);
     res.redirect(`/schools/${schoolId}`);
+  } finally {
+    client.release();
+  }
+};
+
+exports.searchPosts = async (req, res) => {
+  const { schoolId, searchTerm, schoolName } = req.query;
+  console.log(schoolName);
+  const client = await pool.connect();
+
+  try {
+    const searchQuery = `
+      SELECT p.id, p.title, p.createDate, p.schoolId, v.id as voteId, v.count
+      FROM Post as p, VoteCount as v 
+      WHERE p.schoolId=${schoolId} and v.id = p.voteCount and (p.title like '%${searchTerm}%' or p.body like '%${searchTerm}%')
+    `;
+    const searchResults = await client.query(searchQuery);
+
+    const decodedPostData = searchResults.rows.map((row) => {
+      row.id = row.id;
+      row.title = validator.unescape(row.title);
+      row.canDeletePost = req.cookies.deviceId == row.deviceid ? true : false;
+      console.log(row);
+      return row;
+    });
+
+    const schoolData = {
+      id: schoolId,
+      name: schoolName,
+    };
+
+    res.render('searchResults', {
+      title: `Your search returned ${decodedPostData.length} results!`,
+      postData: decodedPostData,
+      schoolData: schoolData,
+    });
+  } catch (err) {
+    req.flash(`error`, `Whoops! something broke while searching!`);
+    res.redirect('back');
   } finally {
     client.release();
   }
