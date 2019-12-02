@@ -72,18 +72,6 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col s6 m6">
-          <p>{{schoolData.address}}</p>
-        </div>
-        <div class="col s6 m6">
-          <a href="{{schoolData.id}}/new" class="waves-effect waves-light grey darken-4 btn right">
-            CREATE NEW POST
-            <i class="material-icons right">add_circle</i>
-          </a>
-        </div>
-      </div>
-
       <div class="divider"></div>
 
       {% if postData.length > 0 %}
@@ -97,7 +85,7 @@
                   <i class="material-icons">keyboard_arrow_up</i>
                 </button>
               </form>
-              {{post.votecount}}
+              {{post.count}}
               <form action="/vote/" method="POST" style="margin: 0px;">
                 <input type="hidden" name="voteId" value="{{post.voteid}}">
                 <input name="action" type="hidden" value="downvote">
@@ -119,13 +107,13 @@
       {% else %}
         <div class="row">
           <div class="col s12 m12">
-            <p class="grey-text">hmm, seems like there aren't any posts here yet... You should make a new one!</p>
+            <p class="grey-text">Your search didn't return any results...</p>
           </div>
         </div>
       {% endif %}
       <div class="row">
         <p>
-          <a href="/schools/">← Return to schools view</a>
+          <a href="/schools/{{schoolData.id}}">← Return to school</a>
         </p>
       </div>
     </div>

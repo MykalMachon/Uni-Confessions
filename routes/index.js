@@ -16,6 +16,7 @@ router.get('/schools/', schoolController.getSchools);
 router.get('/schools/new', schoolController.getAddSchool);
 router.get('/schools/:id', schoolController.getSchool);
 router.get('/schools/:id/new', postController.getAddPost);
+router.get('/search/posts/', postController.searchPosts);
 
 // Post School Pages
 router.post(`/schools/new`, schoolController.addSchool);
